@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倾斜摄影技术全流程指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.3.2/tailwind.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --accent: #8b5cf6;
+            --background-light: #f8fafc;
+            --text-light: #1e293b;
+            --text-secondary-light: #64748b;
+            --background-dark: #0f172a;
+            --text-dark: #f1f5f9;
+            --text-secondary-dark: #94a3b8;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 4rem;
+            height: 0.25rem;
+            background-color: var(--primary);
+            border-radius: 0.25rem;
+        }
+        
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .light-mode .card:hover {
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+        }
+        
+        .dark-mode .card:hover {
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .btn {
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .light-mode {
+            background-color: var(--background-light);
+            color: var(--text-light);
+        }
+        
+        .dark-mode {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+        
+        .light-mode .text-secondary {
+            color: var(--text-secondary-light);
+        }
+        
+        .dark-mode .text-secondary {
+            color: var(--text-secondary-dark);
+        }
+        
+        .light-mode .card {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .dark-mode .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+        }
+        
+        .light-mode .border-section {
+            border-color: #e2e8f0;
+        }
+        
+        .dark-mode .border-section {
+            border-color: #334155;
+        }
+        
+        .light-mode .hover-card:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .dark-mode .hover-card:hover {
+            background-color: #334155;
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <div class="min-h-screen flex flex-col">
+        <!-- 顶部导航栏 -->
+        <header class="sticky top-0 z-50 backdrop-blur-lg bg-opacity-80 light-mode:bg-white dark-mode:bg-gray-900 border-b border-section">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <a href="#" class="text-xl font-bold flex items-center">
+                    <i class="fas fa-camera text-primary-light mr-2"></i>
+                    <span>倾斜摄影技术</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#intro" class="hover:text-primary-light transition-colors">简介</a>
+                        <a href="#preparation" class="hover:text-primary-light transition-colors">前期准备</a>
+                        <a href="#equipment" class="hover:text-primary-light transition-colors">设备选择</a>
+                        <a href="#planning" class="hover:text-primary-light transition-colors">航线规划</a>
+                        <a href="#shooting" class="hover:text-primary-light transition-colors">现场拍摄</a>
+                        <a href="#processing" class="hover:text-primary-light transition-colors">数据处理</a>
+                        <a href="#notes" class="hover:text-primary-light transition-colors">注意事项</a>
+                        <a href="#faq" class="hover:text-primary-light transition-colors">常见问题</a>
+                    </nav>
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden px-4 pb-4">
+                <nav class="flex flex-col space-y-3">
+                    <a href="#intro" class="hover:text-primary-light transition-colors py-2">简介</a>
+                    <a href="#preparation" class="hover:text-primary-light transition-colors py-2">前期准备</a>
+                    <a href="#equipment" class="hover:text-primary-light transition-colors py-2">设备选择</a>
+                    <a href="#planning" class="hover:text-primary-light transition-colors py-2">航线规划</a>
+                    <a href="#shooting" class="hover:text-primary-light transition-colors py-2">现场拍摄</a>
+                    <a href="#processing" class="hover:text-primary-light transition-colors py-2">数据处理</a>
+                    <a href="#notes" class="hover:text-primary-light transition-colors py-2">注意事项</a>
+                    <a href="#faq" class="hover:text-primary-light transition-colors py-2">常见问题</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- 主要内容 -->
+        <main class="flex-grow">
+            <!-- 英雄区域 -->
+            <section class="bg-gradient-to-br from-blue-500 to-purple-600 text-white py-20 px-4">
+                <div class="container mx-auto max-w-4xl">
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">倾斜摄影技术全流程指南</h1>
+                        <p class="text-xl md:text-2xl opacity-90">从准备工作到后期处理的专业指南</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <a href="#intro" class="btn bg-white text-blue-600 hover:bg-blue-50 font-medium px-6 py-3 rounded-lg shadow-lg flex items-center">
+                            <span>开始探索</span>
+                            <i class="fas fa-arrow-down ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 简介部分 -->
+            <section id="intro" class="py-16 px-4">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">什么是倾斜摄影?</h2>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="fade-in">
+                            <p class="text-lg">倾斜摄影是一种通过多角度拍摄获取物体三维信息的技术，广泛应用于测绘、城市规划、建筑建模等领域。通过在不同角度拍摄同一物体，可以获得更完整的三维信息，从而生成高精度的三维模型。</p>
+                            <p class="mt-4 text-lg">该技术结合了传统航空摄影和地面摄影的优点，能够快速、高效地获取大范围区域的三维数据。</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-xl p-6 shadow-lg fade-in">
+                            <h3 class="text-xl font-semibold mb-4">主要应用领域</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-start">
+                                    <i class="fas fa-city text-blue-500 mt-1 mr-3"></i>
+                                    <span>城市规划与管理</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-building text-blue-500 mt-1 mr-3"></i>
+                                    <span>建筑结构分析与监测</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-map-marked-alt text-blue-500 mt-1 mr-3"></i>
+                                    <span>地形测绘与分析</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-landmark text-blue-500 mt-1 mr-3"></i>
+                                    <span>文化遗产保护与记录</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-cubes text-blue-500 mt-1 mr-3"></i>
+                                    <span>三维建模与可视化</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 前期准备部分 -->
+            <section id="preparation" class="py-16 px-4 border-t border-section">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">前期准备</h2>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="order-2 md:order-1">
+                            <div class="bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-xl p-6 shadow-lg h-full fade-in">
+                                <h3 class="text-xl font-semibold mb-4">准备工作清单</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-3">1</div>
+                                        <span class="font-medium">确定需求和目标</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-3">2</div>
+                                        <span class="font-medium">收集测区资料</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-3">3</div>
+                                        <span class="font-medium">检查天气条件</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-3">4</div>
+                                        <span class="font-medium">申请飞行许可</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 md:order-2 fade-in">
+                            <div class="card rounded-xl p-6 shadow-lg mb-6">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-bullseye text-blue-500 mr-2"></i>
+                                    明确需求
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li>确定拍摄目标（建筑、地形、文化遗产等）</li>
+                                    <li>确定成果用途（三维建模、测绘等）</li>
+                                    <li>确定模型精度要求（分辨率、地面采样距离GSD）</li>
+                                </ul>
+                            </div>
+                            <div class="card rounded-xl p-6 shadow-lg mb-6">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-map-marked-alt text-blue-500 mr-2"></i>
+                                    获取测区资料
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li>收集测区地图、地形数据</li>
+                                    <li>获取已有影像或点云数据</li>
+                                    <li>确定测区范围（GPS坐标或地图标注）</li>
+                                </ul>
+                            </div>
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-cloud-sun text-blue-500 mr-2"></i>
+                                    环境与许可
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li>选择晴朗、无强光、低风速的天气</li>
+                                    <li>避开高压线、信号塔等干扰源</li>
+                                    <li>申请无人机飞行许可（如需要）</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 设备选择部分 -->
+            <section id="equipment" class="py-16 px-4 border-t border-section bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">设备选择</h2>
+                    <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="card rounded-xl overflow-hidden shadow-lg fade-in">
+                            <div class="bg-blue-600 text-white p-4">
+                                <h3 class="text-xl font-semibold flex items-center">
+                                    <i class="fas fa-drone text-white mr-2"></i>
+                                    无人机
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                <p class="mb-4">选择稳定性高、续航长的机型：</p>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>大疆M300 RTK</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>Phantom 4 RTK</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>确保具备RTK/PPK定位功能</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card rounded-xl overflow-hidden shadow-lg fade-in">
+                            <div class="bg-blue-600 text-white p-4">
+                                <h3 class="text-xl font-semibold flex items-center">
+                                    <i class="fas fa-camera text-white mr-2"></i>
+                                    倾斜相机
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                <p class="mb-4">相机配置建议：</p>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>五镜头倾斜相机（1垂直+4倾斜）</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>单相机替代方案</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>通过多次飞行调整角度</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card rounded-xl overflow-hidden shadow-lg fade-in">
+                            <div class="bg-blue-600 text-white p-4">
+                                <h3 class="text-xl font-semibold flex items-center">
+                                    <i class="fas fa-tools text-white mr-2"></i>
+                                    其他设备
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                <p class="mb-4">必备补充设备：</p>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>备用电池（多块）</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>高速存储卡</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>地面控制点（GCP）</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                                        <span>RTK基站</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 航线规划部分 -->
+            <section id="planning" class="py-16 px-4 border-t border-section">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">航线规划</h2>
+                    <div class="mt-8 fade-in">
+                        <div class="card rounded-xl p-6 shadow-lg mb-8">
+                            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                                <i class="fas fa-laptop-code text-blue-500 mr-2"></i>
+                                软件工具
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="hover-card rounded-lg p-4 transition-colors">
+                                    <div class="font-medium mb-2">Pix4Dcapture</div>
+                                    <p class="text-sm text-secondary">专业航线规划软件，支持多种飞行模式</p>
+                                </div>
+                                <div class="hover-card rounded-lg p-4 transition-colors">
+                                    <div class="font-medium mb-2">DJI GS Pro</div>
+                                    <p class="text-sm text-secondary">大疆官方应用，与大疆无人机高度集成</p>
+                                </div>
+                                <div class="hover-card rounded-lg p-4 transition-colors">
+                                    <div class="font-medium mb-2">UgCS</div>
+                                    <p class="text-sm text-secondary">支持地形跟随功能，适合复杂地形</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-4 flex items-center">
+                                    <i class="fas fa-sliders-h text-blue-500 mr-2"></i>
+                                    参数设置
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="font-medium mb-1">航高</div>
+                                        <p class="text-secondary text-sm">根据GSD计算，例如GSD=2cm，航高约100m</p>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium mb-1">重叠率</div>
+                                        <p class="text-secondary text-sm">航向重叠率≥80%，旁向重叠率≥70%</p>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium mb-1">速度</div>
+                                        <p class="text-secondary text-sm">5-10m/s，确保图像不模糊</p>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium mb-1">倾斜角度</div>
+                                        <p class="text-secondary text-sm">倾斜镜头通常设置45°或60°</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-4 flex items-center">
+                                    <i class="fas fa-route text-blue-500 mr-2"></i>
+                                    航线类型
+                                </h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 dark:bg-blue-900 rounded-lg p-2 mr-3">
+                                            <i class="fas fa-th text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium">井字形航线</div>
+                                            <p class="text-secondary text-sm">适合规则区域，覆盖面积大</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 dark:bg-blue-900 rounded-lg p-2 mr-3">
+                                            <i class="fas fa-circle-notch text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium">螺旋形航线</div>
+                                            <p class="text-secondary text-sm">适合建筑物周围飞行</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 dark:bg-blue-900 rounded-lg p-2 mr-3">
+                                            <i class="fas fa-plus text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium">交叉航线</div>
+                                            <p class="text-secondary text-sm">增加覆盖率，提高精度</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 现场拍摄部分 -->
+            <section id="shooting" class="py-16 px-4 border-t border-section bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">现场拍摄</h2>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-6 fade-in">
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-clipboard-check text-blue-500 mr-2"></i>
+                                    设备检查
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>校准指南针、IMU、GPS</span
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>检查电池电量与存储空间</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>设置相机参数：快门速度≥1/1000s</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>光圈F5.6-F8，ISO尽量低（100-400）</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                    布设地面控制点
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>在测区均匀布设高精度GCP</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>使用棋盘格或人工标志</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>通过RTK测量坐标</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="space-y-6 fade-in">
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-plane text-blue-500 mr-2"></i>
+                                    飞行执行
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>确保飞行高度保持一致</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>根据调查对象选择合适光线</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>分批执行航线，确保电池电量</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>实时监控图像质量与位置信息</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-images text-blue-500 mr-2"></i>
+                                    图像获取
+                                </h3>
+                                <ul class="space-y-2 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>保存原始图像，不进行压缩</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>确保每张图像都有GPS信息</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <span>拍摄完成后及时检查图像质量</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数据处理部分 -->
+            <section id="processing" class="py-16 px-4 border-t border-section">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">数据处理</h2>
+                    <div class="mt-8 fade-in">
+                        <div class="card rounded-xl p-6 shadow-lg mb-8">
+                            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                                <i class="fas fa-laptop-code text-blue-500 mr-2"></i>
+                                处理软件选择
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="hover-card rounded-lg p-4 transition-colors">
+                                    <div class="font-medium mb-2">ContextCapture</div>
+                                    <p class="text-sm text-secondary">优秀的倾斜摄影处理软件，适用于大规模项目</p>
+                                </div>
+                                <div class="hover-card rounded-lg p-4 transition-colors">
+                                    <div class="font-medium mb-2">Pix4Dmapper</div>
+                                    <p class="text-sm text-secondary">全自动处理工具，操作简单直观</p>
+                                </div>
+                                <div class="hover-card rounded-lg p-4 transition-colors">
+                                    <div class="font-medium mb-2">Metashape</div>
+                                    <p class="text-sm text-secondary">高精度三维重建软件，支持多种数据格式</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-cogs text-blue-500 mr-2"></i>
+                                    处理流程
+                                </h3>
+                                <ol class="space-y-4 text-secondary relative before:content-[''] before:absolute before:top-0 before:left-4 before:bottom-0 before:w-0.5 before:bg-blue-100 dark:before:bg-blue-900">
+                                    <li class="flex items-start pl-12 relative before:content-['1'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>图像导入与整理</span>
+                                    </li>
+                                    <li class="flex items-start pl-12 relative before:content-['2'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>空三加密与自动匹配</span>
+                                    </li>
+                                    <li class="flex items-start pl-12 relative before:content-['3'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>加入地面控制点</span>
+                                    </li>
+                                    <li class="flex items-start pl-12 relative before:content-['4'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>重建稠密点云</span>
+                                    </li>
+                                    <li class="flex items-start pl-12 relative before:content-['5'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>生成三维网格</span>
+                                    </li>
+                                    <li class="flex items-start pl-12 relative before:content-['6'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>纹理映射与优化</span>
+                                    </li>
+                                    <li class="flex items-start pl-12 relative before:content-['7'] before:absolute before:left-0 before:w-8 before:h-8 before:rounded-full before:bg-blue-500 before:text-white before:flex before:items-center before:justify-center">
+                                        <span>输出成果</span>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="card rounded-xl p-6 shadow-lg">
+                                    <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                        <i class="fas fa-th-large text-blue-500 mr-2"></i>
+                                        数据成果
+                                    </h3>
+                                    <ul class="space-y-2 text-secondary">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>实景三维模型（osgb、obj、fbx等格式）</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>DOM（数字正射影像图）</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>DEM（数字高程模型）</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>点云数据（las、ply格式）</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="card rounded-xl p-6 shadow-lg">
+                                    <h3 class="text-xl font-semibold mb-3 flex items-center">
+                                        <i class="fas fa-magic text-blue-500 mr-2"></i>
+                                        优化建议
+                                    </h3>
+                                    <ul class="space-y-2 text-secondary">
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>细化三维模型边缘</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>移除多余点云数据</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>进行贴图色彩均衡</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                            <span>按需进行LOD分层处理</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 注意事项部分 -->
+            <section id="notes" class="py-16 px-4 border-t border-section bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">注意事项</h2>
+                    <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="fade-in">
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-4 flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                                    技术难点
+                                </h3>
+                                <ul class="space-y-3 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-exclamation-circle text-yellow-500 mt-1 mr-2"></i>
+                                        <div>
+                                            <span class="font-medium">数据体量大</span>
+                                            <p class="mt-1 text-sm">大型项目可能产生几十GB甚至更大的数据，需要高性能计算机</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-exclamation-circle text-yellow-500 mt-1 mr-2"></i>
+                                        <div>
+                                            <span class="font-medium">模型精度与完整性</span>
+                                            <p class="mt-1 text-sm">复杂场景（如狭窄空间、高层建筑）可能出现模型不完整</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-exclamation-circle text-yellow-500 mt-1 mr-2"></i>
+                                        <div>
+                                            <span class="font-medium">纹理质量</span>
+                                            <p class="mt-1 text-sm">光照不均、反光表面可能导致纹理问题</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="fade-in">
+                            <div class="card rounded-xl p-6 shadow-lg">
+                                <h3 class="text-xl font-semibold mb-4 flex items-center">
+                                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                                    解决方案
+                                </h3>
+                                <ul class="space-y-3 text-secondary">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <div>
+                                            <span class="font-medium">多次拍摄</span>
+                                            <p class="mt-1 text-sm">对于复杂建筑，进行多次、多角度拍摄，增加覆盖率</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                       <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <div>
+                                            <span class="font-medium">分区处理</span>
+                                            <p class="mt
+-1 text-sm">将大型项目分为若干小区域分别处理，最后合并</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                        <div>
+                                            <span class="font-medium">专业处理软件</span>
+                                            <p class="mt-1 text-sm">利用专业软件的增强功能，如自动接缝线优化、色彩均衡</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ部分 -->
+            <section id="faq" class="py-16 px-4 border-t border-section">
+                <div class="container mx-auto max-w-4xl">
+                    <h2 class="section-title text-3xl font-bold">常见问题</h2>
+                    <div class="mt-8 fade-in">
+                        <div class="card rounded-xl p-6 shadow-lg space-y-6">
+                            <div class="border-b border-section pb-4">
+                                <h3 class="text-lg font-medium mb-2">倾斜摄影与传统航测有什么区别？</h3>
+                                <p class="text-secondary">传统航测主要采集垂直影像，而倾斜摄影同时采集垂直和倾斜角度的影像。倾斜摄影能够获取建筑物侧面信息，生成更完整的三维模型，更适合城市建模和复杂地形建模。</p>
+                            </div>
+                            <div class="border-b border-section pb-4">
+                                <h3 class="text-lg font-medium mb-2">拍摄一平方公里的区域需要多少时间？</h3>
+                                <p class="text-secondary">根据需求精度和复杂程度不同，拍摄一平方公里区域通常需要30分钟到2小时不等。如果是高精度要求或复杂地形，可能需要更长时间。</p>
+                            </div>
+                            <div class="border-b border-section pb-4">
+                                <h3 class="text-lg font-medium mb-2">模型精度受哪些因素影响？</h3>
+                                <p class="text-secondary">模型精度主要受以下因素影响：相机分辨率、镜头质量、飞行高度、图像重叠度、地面控制点精度和分布、数据处理参数设置等。</p>
+                            </div>
+                            <div class="border-b border-section pb-4">
+                                <h3 class="text-lg font-medium mb-2">如何处理树木和玻璃幕墙等复杂对象？</h3>
+                                <p class="text-secondary">对于树木等非刚体对象，可通过增加拍摄数量和角度来改善；对于玻璃幕墙，可选择合适的光照条件（避免强反光）或采用专业软件的玻璃处理功能进行优化。</p>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-medium mb-2">单镜头与多镜头倾斜相机的选择？</h3>
+                                <p class="text-secondary">多镜头系统（如五镜头）效率更高，一次飞行可获取多角度数据；单镜头系统成本较低，适合小规模项目，但需多次飞行以获取不同角度的图像。选择应根据项目规模、预算和时间要求综合考虑。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="py-12 px-4 border-t border-section bg-gray-50 dark:bg-gray-900">
+            <div class="container mx-auto max-w-4xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <div class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-camera text-primary-light mr-2"></i>
+                            <span>倾斜摄影技术</span>
+                        </div>
+                        <p class="text-secondary mb-4">专业的倾斜摄影技术指南，助力您高效完成三维建模项目。</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">
+                                <i class="fab fa-weixin text-xl"></i>
+                            </a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">
+                                <i class="fab fa-weibo text-xl"></i>
+                            </a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-4">快速导航</h3>
+                        <nav class="flex flex-col space-y-2">
+                            <a href="#intro" class="text-secondary hover:text-primary-light transition-colors">简介</a>
+                            <a href="#preparation" class="text-secondary hover:text-primary-light transition-colors">前期准备</a>
+                            <a href="#equipment" class="text-secondary hover:text-primary-light transition-colors">设备选择</a>
+                            <a href="#planning" class="text-secondary hover:text-primary-light transition-colors">航线规划</a>
+                            <a href="#shooting" class="text-secondary hover:text-primary-light transition-colors">现场拍摄</a>
+                            <a href="#processing" class="text-secondary hover:text-primary-light transition-colors">数据处理</a>
+                        </nav>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-4">相关资源</h3>
+                        <nav class="flex flex-col space-y-2">
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">软件下载</a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">技术论坛</a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">案例展示</a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">行业标准</a>
+                            <a href="#" class="text-secondary hover:text-primary-light transition-colors">联系我们</a>
+                        </nav>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-section text-center text-secondary text-sm">
+                    <p>&copy; 2025 倾斜摄影技术指南. 保留所有权利.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 主题切换
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        
+        function setTheme(isDark) {
+            if (isDark) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // 检查用户偏好
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            setTheme(true);
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            setTheme(!body.classList.contains('dark-mode'));
+        });
+        
+        // 移动端菜单
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 关闭移动菜单当点击链接
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // 滚动动画
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        function checkFade() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+        
+        // 初始检查
+        window.addEventListener('load', checkFade);
+        window.addEventListener('scroll', checkFade);
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
